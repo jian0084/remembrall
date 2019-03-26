@@ -1,0 +1,31 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-app-event": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    }
+  }
+}

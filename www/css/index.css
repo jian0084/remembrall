@@ -25,7 +25,7 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    /* background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
     background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
     background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
     background-image:-webkit-gradient(
@@ -34,10 +34,10 @@ body {
         left bottom,
         color-stop(0, #A7A7A7),
         color-stop(0.51, #E4E4E4)
-    );
+    ); */
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
-    font-size:12px;
+    font-size:16px;
     height:100%;
     margin:0px;
     padding:0px;
@@ -45,38 +45,111 @@ body {
     width:100%;
 }
 
-/* Portrait layout (default) */
-.app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
-    position:absolute;             /* position in the center of the screen */
-    left:50%;
-    top:50%;
-    height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
-    text-align:center;
-    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
-    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
+.hide {
+    display: none;
+} 
+
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
 }
 
-/* Landscape layout (with min-width) */
-@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
-    .app {
-        background-position:left center;
-        padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
-        margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
-                                      /* offset horizontal: half of image width and text area width */
-    }
+.modal {
+    position: fixed;
+    width: 80%;
+    height: 280px;
+    z-index: 200;
+    top: calc((100% - 280px)/2);
+    left: 10%;
+    /* left: calc((100% - 500px)/2); */
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    color: #555;
+    background-color: #eee;
+}
+
+.off {
+    transform: translateY(-400%);
+}
+
+.on {
+    transform: translateY(0);
 }
 
 h1 {
     font-size:24px;
     font-weight:normal;
-    margin:0px;
+    margin:10px;
     overflow:visible;
     padding:0px;
     text-align:center;
 }
+
+#add-btn {
+    /* display: flex; */
+    display: inline-flex;
+    text-align: right;
+    float: right;
+}
+
+
+
+.todolist {
+    list-style: none;
+}
+
+.entry {
+    display: flex;
+    width: 90%;
+}
+
+.entry div:nth-of-type(2) {
+    flex-shrink: 3;
+}
+
+.addpage {
+    width: 100%;
+}
+
+.addpage div,
+.detailpage div
+{
+    margin: 5%;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+#buttons,
+#buttons-detail 
+{
+    display: block;
+    width: 90%;
+    text-align: center;
+
+}
+
+.button {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 15px;
+    width: 30%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 10px;
+  }
 
 .event {
     border-radius:4px;

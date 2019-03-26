@@ -68,11 +68,7 @@ exports.applyPlatformSpecificOptions = function () {
         defaults.ongoing   = false;
         defaults.autoClear = true;
         defaults.led       = undefined;
-        defaults.ledOnTime = undefined;
-        defaults.ledOffTime = undefined;
         defaults.color     = undefined;
-        defaults.vibrate   = undefined;
-        defaults.channelParams = {};
         break;
     }
 
@@ -94,7 +90,6 @@ exports.mergeWithDefaults = function (options) {
     options.at   = this.getValueFor(options, 'at', 'firstAt', 'date');
     options.text = this.getValueFor(options, 'text', 'message');
     options.data = this.getValueFor(options, 'data', 'json');
-    options.channelParams = this.getValueFor(options, 'channelParams');
 
     if (defaults.hasOwnProperty('autoClear')) {
         options.autoClear = this.getValueFor(options, 'autoClear', 'autoCancel');

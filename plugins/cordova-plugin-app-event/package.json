@@ -17,7 +17,8 @@
   },
   "_requiredBy": [
     "#USER",
-    "/"
+    "/",
+    "/de.appplant.cordova.plugin.local-notification"
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-app-event/-/cordova-plugin-app-event-1.2.1.tgz",
   "_shasum": "0eebb14132aa43bb2e5c081a9abdbd97ca2d8132",

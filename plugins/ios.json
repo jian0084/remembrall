@@ -15,6 +15,9 @@
     },
     "de.appplant.cordova.plugin.local-notification": {
       "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "ca.edumedia.jian0084.remembrall"
     }
   },
   "dependent_plugins": {

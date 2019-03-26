@@ -25,7 +25,6 @@ package de.appplant.cordova.plugin.notification;
 
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -33,7 +32,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.annotation.RequiresApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -230,38 +228,16 @@ public class Notification {
      * Show as local notification when in background.
      */
     @SuppressWarnings("deprecation")
-    private void showNotification() {
+    private void showNotification () {
         int id = getOptions().getId();
-        NotificationManager mgr = getNotMgr();
-        /**
-         * create a channel before notify for API >= Android O
-         */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            createChannel(mgr);
 
         if (Build.VERSION.SDK_INT <= 15) {
             // Notification for HoneyComb to ICS
-            mgr.notify(id, builder.getNotification());
+            getNotMgr().notify(id, builder.getNotification());
         } else {
             // Notification for Jellybean and above
-            mgr.notify(id, builder.build());
+            getNotMgr().notify(id, builder.build());
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createChannel(NotificationManager mgr) {
-        NotificationChannel mChannel = new NotificationChannel(
-                getOptions().getChannelID(),
-                getOptions().getChannelName(),
-                getOptions().getImportance());
-        mChannel.setDescription(getOptions().getChannelDescription());
-        mChannel.enableLights(true);
-        // Sets the notification light color for notifications posted to this
-        // channel, if the device supports this feature.
-        mChannel.setLightColor(getOptions().getLedColor());
-        mChannel.enableVibration(true);
-        mChannel.setVibrationPattern(getOptions().getVibrate());
-        mgr.createNotificationChannel(mChannel);
     }
 
     /**

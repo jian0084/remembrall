@@ -18,8 +18,9 @@
     under the License.
 -->
 <html>
-    <head>
-        <!--
+
+<head>
+    <!--
         Customize this policy to fit your own app's needs. For more guidance, see:
             https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
         Some notes:
@@ -28,22 +29,90 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+    <title>Remembrall</title>
+</head>
+
+<body>
+    <div class="homepage">
+        <h1>Remembrall</h1>
+        <button id="add-btn"><img src="./img/baseline_add_circle_outline_black_48pt_1x.png" alt=""></button>
+        <hr>
+        <div class="todolist">
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-    </body>
+        <!-- <ul class="todolist">
+            <li class="entry">
+                <div class="item1">Todo 1</div>
+                <div class="item2">Jan 1</div>
+                <button class="home-del item2"><img src="./img/baseline_delete_outline_black_48pt_1x.png" alt=""></button>
+            </li>
+        </ul> -->
+    </div>
+
+
+
+    <!-- <div class="overlay hide">&nbsp;</div>
+
+    <div class="modal off">
+        <div class="modal-header">
+            <h2>Confirmation</h2>
+        </div>
+        <div class="modal-message">
+            <p>Are you sure you want to delete this reminder?</p>
+            <p id="confirmItem"></p>
+        </div>
+        <button class="modal-cancel">Cancel</button>
+        <button class="modal-delete">Delete</button>
+    </div> -->
+
+
+    
+
+    <div class="addpage hide">
+
+        <div id="add-title">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title">
+        </div>
+
+        <div id="add-content">
+            <label for="content">Content:</label>
+            ​<textarea id="content" rows="10" cols="50" placeholder="Enter the details here"></textarea>
+        </div>
+
+        <div id="add-date">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" placeholder="2019-01-01" min="2019-01-01" max="9999-12-31">
+        </div>
+
+        <div id="buttons">
+            <button type="button" class="button" id="cancel-btn">Cancel</button>
+            <button type="button" class="button" id="save-btn">Save</button>
+        </div>
+
+    </div>
+
+    <div class="detailpage hide">
+        <p id="titleDisplay"></p>
+        <p id="contentDisplay"></p>
+        <p id="dateDisplay"></p>
+
+        <div id="buttons-detail">
+            <button type="button" class="button" id="back-btn">Back</button>
+            <button type="button" class="button" id="delete-btn">Delete</button>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/luxon.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</body>
+
 </html>
