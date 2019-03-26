@@ -98,7 +98,12 @@ let app = {
                 deleteImg.src = 'file:///android_asset/www/img/baseline_delete_outline_black_48pt_1x.png';
                 deleteImg.alt = 'delete';
                 deleteImg.title = 'delete';
-                // deleteImg.addEventListener('click', app.showOverlay);
+                deleteImg.addEventListener('click', function(){
+                    entry.removeEventListener('click', app.showDetail);
+                    entry.classList.add('to-be-del');
+                    let message = "Are you sure you want to delete this reminder?";
+                    navigator.notification.confirm(message, app.confirmHome, 'Confirmation', ['Cancel', 'Delete'])
+                });
 
                 // deleteBtn.innerHTML += deleteImg;
                 // div3.innerHTML += deleteBtn;
@@ -128,7 +133,7 @@ let app = {
         //delete button on detailpage
         document.querySelector('#delete-btn').addEventListener("click", function(){
             let message = "Are you sure you want to delete this reminder?";
-            navigator.notification.confirm(message, app.onConfirm, 'Confirmation', ['Cancel', 'Delete'])
+            navigator.notification.confirm(message, app.confirmDetail, 'Confirmation', ['Cancel', 'Delete'])
         });
 
 
@@ -207,19 +212,6 @@ let app = {
         //     // get(), getAll(), getScheduled() and getTriggered() will get the notification based on an id
         // });
 
-
-        /**
-         * if(props.icon){
-          noteOptions.icon = './img/calendar-md-@2x.png'
-        }
-        if(props.led){
-          noteOptions.led = '#33CC00'
-        }
-        if(props.actions){
-          noteOptions.actions = [{ id: "yes", title: "Do it" }, { id: "no", title: "Nah" }]
-        }
-        **/
-
     },
 
     showDetail: function (ev) {
@@ -240,34 +232,53 @@ let app = {
 
     },
 
-    onConfirm: function(buttonIndex) {
+    confirmDetail: function(buttonIndex) {
         if (buttonIndex == '2'){
             let id = document.querySelector('#delete-btn').getAttribute('data-id');
             app.deleteNote(id);
         }
     },
 
-    deleteNote: function (id) {
-        app.homepage.classList.remove('hide');
-        app.detailpage.classList.add('hide');
-
-        if(app.homepage.classList.contains('hide')){
-            id = ev.target.getAttribute('data-id');
-        } else if(app.detailpage.classList.contains('hide')){
-            id = document.getElementById('delete-btn').getAttribute('data-id');
+    confirmHome: function(buttonIndex) {
+        if (buttonIndex == '2'){
+            let id = document.querySelector('.to-be-del').getAttribute('data-id');
+            app.deleteNote(id);
         }
         
-        cordova.plugins.notification.local.cancel(id, function () {
-            // will get rid of notification id 1 if it has NOT been triggered or added to the notification center
-            // cancelAll() will get rid of all of them
-            console.log('delete: ' + id);
-            app.generateList();
+        
+    },
+
+    deleteNote: function (id) {
+        // let id;
+        // if(app.homepage.classList.contains('hide')){
+        //     id = ev.target.getAttribute('data-id');
+        // } else if(app.detailpage.classList.contains('hide')){
+        //     id = document.getElementById('delete-btn').getAttribute('data-id');
+        // }
+
+        cordova.plugins.notification.local.isTriggered(id, function () {
+            cordova.plugins.notification.local.clear(id, function () {
+                // will dismiss a notification that has been triggered or added to notification center
+                app.generateList();
+            });
+        });
+        //     // navigator.notification.alert(present ? "present" : "not found");
+        //     // can also call isTriggered() or isScheduled()
+        //     // getAllIds(), getScheduledIds() and getTriggeredIds() will give you an array of ids
+        //     // get(), getAll(), getScheduled() and getTriggered() will get the notification based on an id
+        // });
+        
+        cordova.plugins.notification.local.isScheduled(id, function () {
+            cordova.plugins.notification.local.cancel(id, function () {
+                // will get rid of notification id 1 if it has NOT been triggered or added to the notification center
+                app.generateList();
+            });
         });
 
-        cordova.plugins.notification.local.clear(id, function () {
-            // will dismiss a notification that has been triggered or added to notification center
-            app.generateList();
-        });
+
+
+        app.homepage.classList.remove('hide');
+        app.detailpage.classList.add('hide');
         
     },
 
