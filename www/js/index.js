@@ -45,9 +45,9 @@ let app = {
         // cordova.plugins.notification.local.cancelAll(function() {alert("done");}, this);
         // cordova.plugins.notification.local.clearAll();
         // document.querySelector('.todolist').innerHTML = '',
+
         app.generateList();
         app.addListeners();
- 
     },
 
     generateList: function () {
@@ -77,36 +77,38 @@ let app = {
             notes.forEach(note => {
                 let entry = document.createElement('li');
                 entry.classList.add('entry');
+                entry.classList.add('grid');
                 entry.setAttribute("data-id", note.id);
                 entry.addEventListener('click', app.showDetail)
 
-                // let div1 = document.createElement('div');
-                // let div2 = document.createElement('div');
-                // let div3 = document.createElement('div');
+                let date = document.createTextNode(note.data);
+                let dateContainer = document.createElement('p');
+                dateContainer.appendChild(date);
+                dateContainer.classList.add('item1')
+                entry.appendChild(dateContainer);
 
                 let title = document.createTextNode(note.title);
-                // div1.innerHTML += title;
-                entry.appendChild(title);
-
-                let date = document.createTextNode(note.data);
-                // div2.innerHTML += date;
-                entry.appendChild(date);
+                let titleContainer = document.createElement('p');
+                titleContainer.appendChild(title);
+                titleContainer.classList.add('item2');
+                entry.appendChild(titleContainer);
 
                 // let deleteBtn = document.createElement('button');
                 let deleteImg = document.createElement('img');
                 deleteImg.classList.add('home-del');
-                deleteImg.src = 'file:///android_asset/www/img/baseline_delete_outline_black_48pt_1x.png';
+                deleteImg.classList.add('item3');
+                // deleteImg.src = "../img/icons8-trash-50.png";
+                deleteImg.src = "./img/icons8-waste-50.png";
+                // deleteImg.src = 'https://img.icons8.com/ios/50/000000/waste.png';
                 deleteImg.alt = 'delete';
                 deleteImg.title = 'delete';
+                deleteImg.height = 25;
                 deleteImg.addEventListener('click', function(){
                     entry.removeEventListener('click', app.showDetail);
                     entry.classList.add('to-be-del');
                     let message = "Are you sure you want to delete this reminder?";
                     navigator.notification.confirm(message, app.confirmHome, 'Confirmation', ['Cancel', 'Delete'])
                 });
-
-                // deleteBtn.innerHTML += deleteImg;
-                // div3.innerHTML += deleteBtn;
                 entry.appendChild(deleteImg);
 
                 list.appendChild(entry);
@@ -138,10 +140,21 @@ let app = {
 
 
         cordova.plugins.notification.local.on("click", function (notification) {
-            navigator.notification.alert("clicked: " + notification.title);
+            // navigator.notification.alert("clicked: " + notification.title);
             //user has clicked on the popped up notification
+            let notifications = document.getElementsByTagName('li');
+            
+            console.log(notifications);
 
-
+            for (let i = 0; i < notifications.length; i++)
+            {
+                if (notifications[i].getAttribute('data-id') == notification.id) {
+                    notifications[i].classList.add('highlight');
+                    setTimeout(() => {
+                        notifications[i].classList.remove('highlight');
+                    }, 5000);
+                }
+            }
         });
 
         cordova.plugins.notification.local.on("trigger", function (notification) {
@@ -170,17 +183,25 @@ let app = {
         // let inOneMin = new Date();
         // inOneMin.setMinutes(inOneMin.getMinutes() + 1);
 
-        let todoDate = document.getElementById('date').value;
 
-        if(luxon.DateTime.fromISO(todoDate) > luxon.DateTime.local()){
-            remindDate = luxon.DateTime.fromISO(todoDate).minus({ days: 7 }).toISODate();
+        let datetime = document.getElementById('datetime').value;
+        let monthNames = [
+            "January", "February", "March","April", "May", "June", "July",
+            "August", "September", "October", "November", "December"];
+        
+        let month = monthNames[new Date(datetime).getUTCMonth()]; 
+        // let month = new Date(datetime).getUTCMonth(); 
+        let date = new Date(datetime).getUTCDate();
+        let monthdate = `${month} ${date}`;
+
+        if(luxon.DateTime.fromISO(datetime) >= luxon.DateTime.local()){
+            remindDate = luxon.DateTime.fromISO(datetime).minus({ days: 7 }).toISODate();
         } else {
-            todoDate = luxon.DateTime.fromISO(todoDate).plus({ year: 1 }).toISODate();
-            remindDate = luxon.DateTime.fromISO(todoDate).plus({ year: 1 }).minus({ days: 7 }).toISODate();   
+            datetime = luxon.DateTime.fromISO(datetime).plus({ year: 1 }).toISODate();
+            remindDate = luxon.DateTime.fromISO(datetime).plus({ year: 1 }).minus({ days: 7 }).toISODate();   
         }
-        remindDate = new Date(remindDate);  
 
-        console.log(todoDate);
+        remindDate = new Date(remindDate);  
         console.log(remindDate);
 
         let noteOptions = {
@@ -189,7 +210,7 @@ let app = {
             text: document.getElementById('content').value,
             at: remindDate,
             badge: 1,
-            data: todoDate
+            data: monthdate
         };
 
         
@@ -203,14 +224,7 @@ let app = {
 
         document.getElementById('title').value = '';
         document.getElementById('content').value = '';
-        document.getElementById('date').value = '';
-
-        // cordova.plugins.notification.local.isPresent(noteOptions.id, function (present) {
-        //     // navigator.notification.alert(present ? "present" : "not found");
-        //     // can also call isTriggered() or isScheduled()
-        //     // getAllIds(), getScheduledIds() and getTriggeredIds() will give you an array of ids
-        //     // get(), getAll(), getScheduled() and getTriggered() will get the notification based on an id
-        // });
+        document.getElementById('datetime').value = '';
 
     },
 
@@ -218,16 +232,21 @@ let app = {
         app.homepage.classList.add('hide');
         app.detailpage.classList.remove('hide');
 
+        console.log(ev);
+
         let id = ev.currentTarget.getAttribute('data-id');
         let title = ev.currentTarget.getAttribute('title');
         document.getElementById('delete-btn').setAttribute('data-id', id);
-        // ocument.getElementById('delete-btn').setAttribute('data-title', title);
 
         cordova.plugins.notification.local.get(id, note => {
             //note will be the object with all the details about the notification.
+            let month = note.at.getUTCMonth() + 1; 
+            let day = note.at.getUTCDate() + 7;//from remind date to todo date
+            let year = note.at.getUTCFullYear();
             document.getElementById('titleDisplay').textContent = note.title;
             document.getElementById('contentDisplay').textContent = note.text;
-            document.getElementById('dateDisplay').textContent = note.data;
+            document.getElementById('dateDisplay').textContent = `${month} ${day} ${year}`;
+            document.getElementById('timeDisplay').textContent = note.at.getTime();
           });
 
     },
@@ -249,12 +268,6 @@ let app = {
     },
 
     deleteNote: function (id) {
-        // let id;
-        // if(app.homepage.classList.contains('hide')){
-        //     id = ev.target.getAttribute('data-id');
-        // } else if(app.detailpage.classList.contains('hide')){
-        //     id = document.getElementById('delete-btn').getAttribute('data-id');
-        // }
 
         cordova.plugins.notification.local.isTriggered(id, function () {
             cordova.plugins.notification.local.clear(id, function () {
@@ -281,28 +294,6 @@ let app = {
         app.detailpage.classList.add('hide');
         
     },
-
-    // deleteNote: function (ev) {
-    //     ev.preventDefault();
-    //     homepage.classList.remove('hide');
-    //     detailpage.classList.add('hide');
-    //     let id;
-
-    //     if(homepage.classList.contains(hide)){
-    //         id = ev.target.getAttribute('data-id');
-    //     } else if(detailpage.classList.contains(hide)){
-    //         id = document.getElementById('delete-btn').getAttribute('data-id');
-    //     }
-        
-    //     cordova.plugins.notification.local.cancel(id, function () {
-    //         // will get rid of notification id 1 if it has NOT been triggered or added to the notification center
-    //         // cancelAll() will get rid of all of them
-    //         console.log('delete: ' + id);
-    //     });
-
-    //     document.querySelector('.todolist').innerHTML = '';
-    //     app.generateList();
-    // },
 
 };
 app.init();

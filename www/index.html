@@ -30,7 +30,8 @@
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -41,18 +42,17 @@
 
 <body>
     <div class="homepage">
-        <h1>Remembrall</h1>
-        <button id="add-btn"><img src="./img/baseline_add_circle_outline_black_48pt_1x.png" alt=""></button>
-        <hr>
+        <h1>Reminders</h1>
+        <img id="add-btn" src="./img/icons8-add-50.png" width="48px" alt="add">
         <div class="todolist">
         </div>
-        <!-- <ul class="todolist">
-            <li class="entry">
-                <div class="item1">Todo 1</div>
-                <div class="item2">Jan 1</div>
-                <button class="home-del item2"><img src="./img/baseline_delete_outline_black_48pt_1x.png" alt=""></button>
-            </li>
-        </ul> -->
+        <ul class="todolist">
+            <!-- <li class="entry">
+                <p class="item1">2019-04-01</p>
+                <p class="item2">Todo 1</p>
+                <img class="home-del item3" src="" height="25px" alt="delete">
+            </li> -->
+        </ul>
     </div>
 
 
@@ -65,12 +65,12 @@
 
         <div id="add-content">
             <label for="content">Content:</label>
-            ​<textarea id="content" rows="10" cols="50" placeholder="Enter the details here"></textarea>
+            <textarea id="content" rows="10" cols="50" placeholder="Enter the details here"></textarea>
         </div>
 
-        <div id="add-date">
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" placeholder="2019-01-01" min="2019-01-01" max="9999-12-31">
+        <div id="add-datetime">
+            <label for="datetime">Time</label>
+            <input type="datetime-local" id="datetime" name="datetime" value="">
         </div>
 
         <div id="buttons">
@@ -84,6 +84,7 @@
         <p id="titleDisplay"></p>
         <p id="contentDisplay"></p>
         <p id="dateDisplay"></p>
+        <p id="timeDisplay"></p>
 
         <div id="buttons-detail">
             <button type="button" class="button" id="back-btn">Back</button>
@@ -92,6 +93,7 @@
 
     </div>
 
+    <a class="hide" href="https://icons8.com/icon/4887/waste">Waste icon by Icons8</a>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/luxon.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
