@@ -65,25 +65,26 @@ let app = {
 
             console.log('generate list');
             console.log(notes);
-            // ids is an array of all the ids of scheduled notifications
 
-            // let entry = document.createElement('li');
-            // let test = document.createTextNode("test");
-            // let div4 = document.createElement('div');
-            // div4.innerHTML += test;
-            // entry.appendChild(div4);
-            // list.appendChild(entry);
+            let monthNames = [
+                "January", "February", "March","April", "May", "June", "July",
+                "August", "September", "October", "November", "December"];
 
             notes.forEach(note => {
+                let datetime = note.data;
+                let month = monthNames[new Date(datetime).getUTCMonth()];
+                let date = new Date(datetime).getUTCDate();
+                let monthdate = `${month} ${date}`;
+
                 let entry = document.createElement('li');
                 entry.classList.add('entry');
                 entry.classList.add('grid');
                 entry.setAttribute("data-id", note.id);
                 entry.addEventListener('click', app.showDetail)
 
-                let date = document.createTextNode(note.data);
+                let monthDate = document.createTextNode(monthdate);
                 let dateContainer = document.createElement('p');
-                dateContainer.appendChild(date);
+                dateContainer.appendChild(monthDate);
                 dateContainer.classList.add('item1')
                 entry.appendChild(dateContainer);
 
@@ -97,9 +98,7 @@ let app = {
                 let deleteImg = document.createElement('img');
                 deleteImg.classList.add('home-del');
                 deleteImg.classList.add('item3');
-                // deleteImg.src = "../img/icons8-trash-50.png";
                 deleteImg.src = "./img/icons8-waste-50.png";
-                // deleteImg.src = 'https://img.icons8.com/ios/50/000000/waste.png';
                 deleteImg.alt = 'delete';
                 deleteImg.title = 'delete';
                 deleteImg.height = 25;
@@ -185,14 +184,6 @@ let app = {
 
 
         let datetime = document.getElementById('datetime').value;
-        let monthNames = [
-            "January", "February", "March","April", "May", "June", "July",
-            "August", "September", "October", "November", "December"];
-        
-        let month = monthNames[new Date(datetime).getUTCMonth()]; 
-        // let month = new Date(datetime).getUTCMonth(); 
-        let date = new Date(datetime).getUTCDate();
-        let monthdate = `${month} ${date}`;
 
         if(luxon.DateTime.fromISO(datetime) >= luxon.DateTime.local()){
             remindDate = luxon.DateTime.fromISO(datetime).minus({ days: 7 }).toISODate();
@@ -205,14 +196,15 @@ let app = {
         console.log(remindDate);
 
         let noteOptions = {
-            id: new Date(),
+            id: new Date().getMilliseconds(),
             title: document.getElementById('title').value,
             text: document.getElementById('content').value,
             at: remindDate,
             badge: 1,
-            data: monthdate
+            data: datetime
         };
 
+        console.log(typeof(noteOptions.id));
         
         cordova.plugins.notification.local.schedule(noteOptions, ()=>{
             app.generateList();
@@ -234,19 +226,30 @@ let app = {
 
         console.log(ev);
 
-        let id = ev.currentTarget.getAttribute('data-id');
-        let title = ev.currentTarget.getAttribute('title');
+        let id = parseInt(ev.currentTarget.getAttribute('data-id'));
+        console.log(typeof(id));
+
         document.getElementById('delete-btn').setAttribute('data-id', id);
+
+        let monthNames = [
+            "January", "February", "March","April", "May", "June", "July",
+            "August", "September", "October", "November", "December"];
 
         cordova.plugins.notification.local.get(id, note => {
             //note will be the object with all the details about the notification.
-            let month = note.at.getUTCMonth() + 1; 
-            let day = note.at.getUTCDate() + 7;//from remind date to todo date
-            let year = note.at.getUTCFullYear();
+            console.log(note.data);
+            let datetime = new Date(note.data);
+            console.log(datetime);
+            let month = monthNames[datetime.getUTCMonth()]; 
+            let day = datetime.getUTCDate();//from remind date to todo date
+            let year = datetime.getUTCFullYear();
+            let hour = datetime.getHours();
+            let minute = datetime.getMinutes();
+            console.log(`${month} ${day} ${year}`);
             document.getElementById('titleDisplay').textContent = note.title;
             document.getElementById('contentDisplay').textContent = note.text;
-            document.getElementById('dateDisplay').textContent = `${month} ${day} ${year}`;
-            document.getElementById('timeDisplay').textContent = note.at.getTime();
+            document.getElementById('dateDisplay').textContent = `${month} ${day}, ${year}`;
+            document.getElementById('timeDisplay').textContent = `${hour}:${minute}`;
           });
 
     },
@@ -262,9 +265,9 @@ let app = {
         if (buttonIndex == '2'){
             let id = document.querySelector('.to-be-del').getAttribute('data-id');
             app.deleteNote(id);
+        }else if (buttonIndex == '1'){
+            document.querySelector('.to-be-del').classList.remove('to-be-del');
         }
-        
-        
     },
 
     deleteNote: function (id) {
@@ -275,11 +278,6 @@ let app = {
                 app.generateList();
             });
         });
-        //     // navigator.notification.alert(present ? "present" : "not found");
-        //     // can also call isTriggered() or isScheduled()
-        //     // getAllIds(), getScheduledIds() and getTriggeredIds() will give you an array of ids
-        //     // get(), getAll(), getScheduled() and getTriggered() will get the notification based on an id
-        // });
         
         cordova.plugins.notification.local.isScheduled(id, function () {
             cordova.plugins.notification.local.cancel(id, function () {

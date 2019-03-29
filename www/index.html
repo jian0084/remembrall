@@ -41,7 +41,7 @@
 </head>
 
 <body>
-    <div class="homepage">
+    <div class="homepage hide">
         <h1>Reminders</h1>
         <img id="add-btn" src="./img/icons8-add-50.png" width="48px" alt="add">
         <div class="todolist">
@@ -59,17 +59,17 @@
     <div class="addpage hide">
 
         <div id="add-title">
-            <label for="title">Title:</label>
+            <label for="title">Title</label>
             <input type="text" id="title" name="title">
         </div>
 
         <div id="add-content">
-            <label for="content">Content:</label>
+            <label for="content">Content</label>
             <textarea id="content" rows="10" cols="50" placeholder="Enter the details here"></textarea>
         </div>
 
         <div id="add-datetime">
-            <label for="datetime">Time</label>
+            <label for="datetime">Date and Time</label>
             <input type="datetime-local" id="datetime" name="datetime" value="">
         </div>
 
@@ -80,11 +80,24 @@
 
     </div>
 
-    <div class="detailpage hide">
-        <p id="titleDisplay"></p>
-        <p id="contentDisplay"></p>
-        <p id="dateDisplay"></p>
-        <p id="timeDisplay"></p>
+    <div class="detailpage">
+        <div id="title">
+            <p class="fieldName">Title</p>
+            <p id="titleDisplay">test</p>
+        </div>
+        <div id="content">
+            <p class="fieldName">Content</p>
+            <p id="contentDisplay">teststsetert ergw </p>
+        </div>
+        <div>
+            <p class="fieldName">Date</p>
+            <p id="dateDisplay">Jan 1 2019</p>
+        </div>
+        <div>
+            <p class="fieldName">Time</p>
+            <p id="timeDisplay">10:00</p>
+        </div>
+        
 
         <div id="buttons-detail">
             <button type="button" class="button" id="back-btn">Back</button>
