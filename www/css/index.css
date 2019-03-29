@@ -124,7 +124,7 @@ h1 {
 .addpage div,
 .detailpage div
 {
-    margin: 0 5%;
+    margin: 20px 5%;
     font-size: 16px;
     color: #888;
 }
@@ -137,7 +137,7 @@ h1 {
 
 .fieldName {
     color: #2699FB;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .addpage input

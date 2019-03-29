@@ -41,12 +41,8 @@ let app = {
         document.addEventListener("deviceready", app.ready);
     },
     ready: function () {
-        // cordova.plugins.notification.local.cancelAll(function() {alert("done");}, this);
-        // cordova.plugins.notification.local.clearAll();
-        // document.querySelector('.todolist').innerHTML = '',
-
-        app.generateList();
         app.addListeners();
+        app.generateList();
     },
 
     generateList: function () {
@@ -91,7 +87,6 @@ let app = {
                 titleContainer.classList.add('item2');
                 entry.appendChild(titleContainer);
 
-                // let deleteBtn = document.createElement('button');
                 let deleteImg = document.createElement('img');
                 deleteImg.classList.add('home-del');
                 deleteImg.classList.add('item3');
@@ -101,7 +96,6 @@ let app = {
                 deleteImg.height = 25;
                 deleteImg.addEventListener('click', function(ev){
                     ev.stopPropagation();
-                    //entry.removeEventListener('click', app.showDetail);
                     entry.classList.add('to-be-del');
                     let message = "Are you sure you want to delete this reminder?";
                     navigator.notification.confirm(message, app.confirmHome, 'Confirmation', ['Cancel', 'Delete'])
@@ -151,7 +145,6 @@ let app = {
                 remindDate = new Date(remindDate);
             }
             let noteOptions = {
-                // id: new Date().getMilliseconds(),
                 id: notification.id,
                 title: notification.title,
                 text: notification.text,
@@ -178,12 +171,6 @@ let app = {
                 }
             }
         });
-
-        // cordova.plugins.notification.local.on("trigger", function (notification) {
-        //     //added to the notification center on the date to trigger it.
-        //     // navigator.notification.alert("triggered: " + notification.title);
-        //     //set another reminder
-        // });
     },
 
     addNote: function (ev) {
