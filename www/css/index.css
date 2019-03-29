@@ -127,8 +127,13 @@ h1 {
     margin: 0 5%;
     font-size: 16px;
     color: #888;
+}
+
+.detailpage div {
     border-bottom: #bbdefb solid 1px;
 }
+
+
 
 .fieldName {
     color: #2699FB;

@@ -41,7 +41,6 @@ let app = {
         document.addEventListener("deviceready", app.ready);
     },
     ready: function () {
-        console.log("ready");
         // cordova.plugins.notification.local.cancelAll(function() {alert("done");}, this);
         // cordova.plugins.notification.local.clearAll();
         // document.querySelector('.todolist').innerHTML = '',
@@ -51,7 +50,6 @@ let app = {
     },
 
     generateList: function () {
-        console.log('generate list here');
         let list = document.querySelector('.todolist');
         list.innerHTML = '',
 
@@ -63,7 +61,6 @@ let app = {
                 return 0;
             });
 
-            console.log('generate list');
             console.log(notes);
 
             let monthNames = [
@@ -102,8 +99,9 @@ let app = {
                 deleteImg.alt = 'delete';
                 deleteImg.title = 'delete';
                 deleteImg.height = 25;
-                deleteImg.addEventListener('click', function(){
-                    entry.removeEventListener('click', app.showDetail);
+                deleteImg.addEventListener('click', function(ev){
+                    ev.stopPropagation();
+                    //entry.removeEventListener('click', app.showDetail);
                     entry.classList.add('to-be-del');
                     let message = "Are you sure you want to delete this reminder?";
                     navigator.notification.confirm(message, app.confirmHome, 'Confirmation', ['Cancel', 'Delete'])
@@ -139,11 +137,36 @@ let app = {
 
 
         cordova.plugins.notification.local.on("click", function (notification) {
-            // navigator.notification.alert("clicked: " + notification.title);
             //user has clicked on the popped up notification
+
+            let datetime = notification.data;
+            let datetimeObj = new Date(notification.data);
+            let date = datetimeObj.getUTCDate();
+            let today = new Date();
+            let remindDate;
+
+            //if the notification is for future date, create a new notification on the tododate
+            if(date > today.getUTCDate()){
+                remindDate = luxon.DateTime.fromISO(datetime).toISODate();
+                remindDate = new Date(remindDate);
+            }
+            let noteOptions = {
+                // id: new Date().getMilliseconds(),
+                id: notification.id,
+                title: notification.title,
+                text: notification.text,
+                at: remindDate,
+                badge: 1,
+                data: datetime
+            };
+            cordova.plugins.notification.local.schedule(noteOptions, ()=>{
+                app.generateList();
+            });
+
             let notifications = document.getElementsByTagName('li');
             
             console.log(notifications);
+            console.log(notification);
 
             for (let i = 0; i < notifications.length; i++)
             {
@@ -156,16 +179,16 @@ let app = {
             }
         });
 
-        cordova.plugins.notification.local.on("trigger", function (notification) {
-            //added to the notification center on the date to trigger it.
-            // navigator.notification.alert("triggered: " + notification.title);
-            //set another reminder
-        });
+        // cordova.plugins.notification.local.on("trigger", function (notification) {
+        //     //added to the notification center on the date to trigger it.
+        //     // navigator.notification.alert("triggered: " + notification.title);
+        //     //set another reminder
+        // });
     },
 
     addNote: function (ev) {
 
-        let props = cordova.plugins.notification.local.getDefaults();
+        // let props = cordova.plugins.notification.local.getDefaults();
         //console.log(props);
         /**
          * Notification Object Properties - use it as a reference later on
@@ -179,10 +202,6 @@ let app = {
          * badge
          */
 
-        // let inOneMin = new Date();
-        // inOneMin.setMinutes(inOneMin.getMinutes() + 1);
-
-
         let datetime = document.getElementById('datetime').value;
 
         if(luxon.DateTime.fromISO(datetime) >= luxon.DateTime.local()){
@@ -193,7 +212,6 @@ let app = {
         }
 
         remindDate = new Date(remindDate);  
-        console.log(remindDate);
 
         let noteOptions = {
             id: new Date().getMilliseconds(),
@@ -203,8 +221,6 @@ let app = {
             badge: 1,
             data: datetime
         };
-
-        console.log(typeof(noteOptions.id));
         
         cordova.plugins.notification.local.schedule(noteOptions, ()=>{
             app.generateList();
@@ -271,26 +287,12 @@ let app = {
     },
 
     deleteNote: function (id) {
-
-        cordova.plugins.notification.local.isTriggered(id, function () {
-            cordova.plugins.notification.local.clear(id, function () {
-                // will dismiss a notification that has been triggered or added to notification center
-                app.generateList();
-            });
+        cordova.plugins.notification.local.cancel(id, function () {
+            app.generateList();
         });
-        
-        cordova.plugins.notification.local.isScheduled(id, function () {
-            cordova.plugins.notification.local.cancel(id, function () {
-                // will get rid of notification id 1 if it has NOT been triggered or added to the notification center
-                app.generateList();
-            });
-        });
-
-
 
         app.homepage.classList.remove('hide');
         app.detailpage.classList.add('hide');
-        
     },
 
 };
